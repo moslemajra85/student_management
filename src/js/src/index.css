@@ -3,3 +3,13 @@
   margin: 0 auto;
   text-align: center;
 }
+
+.footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(240, 240, 240, 0.9);
+  height: 5em;
+  padding: 1em;
+}

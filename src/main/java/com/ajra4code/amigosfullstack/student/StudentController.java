@@ -2,10 +2,7 @@ package com.ajra4code.amigosfullstack.student;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,8 +21,16 @@ public class StudentController {
     @GetMapping
     @CrossOrigin(origins = "http://localhost:5173/")
     public List<Student> getAllStudents() {
-
+       //throw new IllegalArgumentException("Cannot get all students");
         return studentService.getAllStudents();
+
+    }
+
+    @PostMapping
+    @CrossOrigin(origins = "http://localhost:5173/")
+    public void addNewStudent(@RequestBody Student student) {
+
+       studentService.addNewStudent(student);
 
     }
 }

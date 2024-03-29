@@ -1,4 +1,4 @@
-import { httpClient } from './httpClient';
+import  httpClient  from './httpClient';
 
 class StudentService {
   constructor(endpoint) {
@@ -12,6 +12,11 @@ class StudentService {
     });
 
     return { request, cancel: () => controller.abort() };
+  }
+
+  addNewStudent(student) {
+  
+    return httpClient.post(this.endpoint, student);
   }
 }
 
