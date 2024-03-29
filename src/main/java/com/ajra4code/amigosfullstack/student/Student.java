@@ -1,18 +1,28 @@
 package com.ajra4code.amigosfullstack.student;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.UUID;
 
 public class Student {
 
-    private final UUID studentId;
-    private final String firstName;
 
+
+    private final UUID studentId;
+    @NotBlank
+     private final String firstName;
+
+    @NotBlank
     private final String lastName;
 
+    //@Email
+    @NotBlank
     private final String email;
 
+    @NotNull
     private final Gender gender;
 
     public enum Gender {

@@ -1,5 +1,7 @@
 package com.ajra4code.amigosfullstack.student;
 
+import com.ajra4code.amigosfullstack.Validators.EmailValidator;
+import com.ajra4code.amigosfullstack.exception.ApiRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -7,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 @Service
 public class StudentService {
@@ -35,9 +38,18 @@ public class StudentService {
 
         UUID newStudentId = Optional.ofNullable(studentId).orElse(UUID.randomUUID());
 
+        // todo: validate email
+        EmailValidator emailValidator = new EmailValidator(student.getEmail());
+        if(!emailValidator.validate()) {
+            throw new ApiRequestException("Email is not valid.");
+        }
+
         // todo: verify that email is not taken
 
         studentDataAccessService.insertStudent(newStudentId, student);
 
     }
+
+
+
 }

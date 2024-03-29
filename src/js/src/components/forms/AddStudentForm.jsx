@@ -1,7 +1,7 @@
 import { Formik } from 'formik';
 import { Input, Button, Tag } from 'antd';
 
-const AddStudentForm = ({onSuccess }) => {
+const AddStudentForm = ({ onSuccess }) => {
   const bottomMargin = { marginBottom: '12px' };
   const tagStyle = { color: 'red', marginBottom: '12px' };
 
@@ -108,7 +108,7 @@ const AddStudentForm = ({onSuccess }) => {
             </Tag>
           )}
 
-          <Button onClick={submitForm} type="primary">
+          <Button onClick={submitForm} type="primary" disabled={!isValid}>
             Submit
           </Button>
         </form>

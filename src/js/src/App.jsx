@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useState } from 'react';
 import create from './services/studentService';
-import { Table, Avatar, Spin, Modal, Tag, notification } from 'antd';
+import { Table, Avatar, Spin, Modal, Tag, notification, Empty } from 'antd';
 import { CloseCircleOutlined } from '@ant-design/icons';
 import Container from './components/Container';
 import Footer from './components/Footer';
@@ -50,10 +50,10 @@ function App() {
         setIsLoading(false);
       })
       .catch((error) => {
+       const {response: {data: {message}}} = error
         if (error instanceof CanceledError) return;
-        setError(error.message);
+        setError(message);
         setIsLoading(false);
-        ErrorNotification('Cannot Fecth Students', error.message);
       });
   };
 
@@ -119,13 +119,14 @@ function App() {
         {contextHolder}
       </>
     );
+
   return (
     <div>
       {contextHolder}
       <Container>
         {isLoading ? (
           <Spin size="large" />
-        ) : (
+        ) : students.length !== 0 ? (
           <Table
             style={{ marginBottom: '100px' }}
             dataSource={students}
@@ -133,6 +134,8 @@ function App() {
             columns={columns}
             pagination={false}
           />
+        ) : (
+          <Empty description={<h1>No Students</h1>}></Empty>
         )}
         <Modal
           title="Add New Student"
