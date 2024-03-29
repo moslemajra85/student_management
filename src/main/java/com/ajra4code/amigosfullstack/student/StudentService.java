@@ -39,12 +39,19 @@ public class StudentService {
         UUID newStudentId = Optional.ofNullable(studentId).orElse(UUID.randomUUID());
 
         // todo: validate email
-        EmailValidator emailValidator = new EmailValidator(student.getEmail());
-        if(!emailValidator.validate()) {
+        EmailValidator emailValidator = new EmailValidator();
+        if(!emailValidator.test(student.getEmail())) {
             throw new ApiRequestException("Email is not valid.");
         }
 
         // todo: verify that email is not taken
+        List<Student> students = studentDataAccessService.selectAllStudents();
+        students.forEach(st -> {
+            if(st.getEmail().equals(student.getEmail())) {
+                throw new ApiRequestException("Email already exist");
+            }
+        });
+
 
         studentDataAccessService.insertStudent(newStudentId, student);
 
