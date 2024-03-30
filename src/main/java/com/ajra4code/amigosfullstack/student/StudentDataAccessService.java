@@ -3,11 +3,13 @@ package com.ajra4code.amigosfullstack.student;
 import com.ajra4code.amigosfullstack.exception.ApiRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -35,7 +37,7 @@ public class StudentDataAccessService {
                  "last_name," +
                  " email, " +
                  "gender) " +
-                 "VALUES(?, ?, ?, ?, ?)";
+                 "VALUES(?, ?, ?, ?, ?::gender)";
 
          return jdbcTemplate.update(
                  sql,
@@ -78,4 +80,42 @@ public class StudentDataAccessService {
     }
 
 
+    public List<StudentCourse> getAllCourseForStudent(UUID studentId) {
+
+       String sql = "SELECT student.studentid, " +
+               "course.course_id, " +
+               "course.name, " +
+               "course.description, " +
+               "course.department, " +
+               "course.teacher_name, " +
+               "student_course.start_date, " +
+               "student_course.end_date, " +
+               "student_course.grade " +
+               "from student " +
+               "join student_course on student_course.student_id = student.studentid " +
+               "join course on student_course.course_id = course.course_id " +
+               "where student.studentid = ?";
+
+          return jdbcTemplate.query(sql, new Object[]{studentId}, mapStudentCourseFromDb());
+
+
+    }
+
+    private RowMapper<StudentCourse> mapStudentCourseFromDb() {
+       // getting every single field and transform it ot java object
+        return (resultSet, i) ->
+                new StudentCourse(
+                        UUID.fromString(resultSet.getString("studentid")),
+                        UUID.fromString(resultSet.getString("course_id")),
+                        resultSet.getString("name"),
+                        resultSet.getString("description"),
+                        resultSet.getString("department"),
+                        resultSet.getString("teacher_name"),
+                        resultSet.getDate("start_date").toLocalDate(),
+                        resultSet.getDate("end_date").toLocalDate(),
+                        Optional.ofNullable(resultSet.getString("grade"))
+                                .map(Integer::parseInt)
+                                .orElse(null)
+                );
+    }
 }
