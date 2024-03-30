@@ -15,11 +15,14 @@ import java.util.regex.Pattern;
 public class StudentService {
 
     private final StudentDataAccessService studentDataAccessService;
+    private final EmailValidator emailValidator;
 
 
     @Autowired
-    public StudentService(StudentDataAccessService studentDataAccessService) {
+    public StudentService(StudentDataAccessService studentDataAccessService,
+                          EmailValidator emailValidator) {
         this.studentDataAccessService = studentDataAccessService;
+        this.emailValidator = emailValidator;
     }
 
 
@@ -39,18 +42,14 @@ public class StudentService {
         UUID newStudentId = Optional.ofNullable(studentId).orElse(UUID.randomUUID());
 
         // todo: validate email
-        EmailValidator emailValidator = new EmailValidator();
-        if(!emailValidator.test(student.getEmail())) {
+         if(!emailValidator.test(student.getEmail())) {
             throw new ApiRequestException("Email is not valid.");
         }
 
         // todo: verify that email is not taken
-        List<Student> students = studentDataAccessService.selectAllStudents();
-        students.forEach(st -> {
-            if(st.getEmail().equals(student.getEmail())) {
-                throw new ApiRequestException("Email already exist");
-            }
-        });
+         if(studentDataAccessService.isEmailTaken(student.getEmail())){
+             throw new ApiRequestException("Email " + student.getEmail() + " is already taken");
+         }
 
 
         studentDataAccessService.insertStudent(newStudentId, student);

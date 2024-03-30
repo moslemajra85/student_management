@@ -50,7 +50,11 @@ function App() {
         setIsLoading(false);
       })
       .catch((error) => {
-       const {response: {data: {message}}} = error
+        const {
+          response: {
+            data: { message },
+          },
+        } = error;
         if (error instanceof CanceledError) return;
         setError(message);
         setIsLoading(false);
@@ -160,7 +164,12 @@ function App() {
                   );
                 })
                 .catch((error) => {
-                  setError(error.message);
+                  const {
+                    response: {
+                      data: { message },
+                    },
+                  } = error;
+                  setError(message);
                 });
             }}
           />

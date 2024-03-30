@@ -1,5 +1,6 @@
 package com.ajra4code.amigosfullstack.student;
 
+import com.ajra4code.amigosfullstack.exception.ApiRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -28,7 +29,6 @@ public class StudentDataAccessService {
      }
 
      int insertStudent(UUID studentId, Student student) {
-
          String sql = "INSERT INTO student (" +
                  "studentid, " +
                  "first_name, " +
@@ -49,6 +49,17 @@ public class StudentDataAccessService {
 
 
     }
+
+     boolean isEmailTaken(String email) {
+
+       String sql = "SELECT EXISTS ( SELECT 1 " +
+               "FROM student " +
+               "WHERE email = ?)";
+
+       return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, new Object[]{email},
+               (resultSet, i) -> resultSet.getBoolean(1)));
+    }
+
 
 
 
